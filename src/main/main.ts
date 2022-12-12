@@ -5,10 +5,12 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
+      devTools: true
     }
   });
 
@@ -19,7 +21,10 @@ function createWindow () {
   else {
     mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
   }
+
+  mainWindow.webContents.openDevTools();
 }
+
 
 app.whenReady().then(() => {
   createWindow();
