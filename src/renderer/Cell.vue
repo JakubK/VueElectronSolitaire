@@ -1,8 +1,6 @@
 <template>
-    <div 
-        class="cell" 
-        :class="{'cell--taken' : isCellTaken(x,y), 'cell--selected' : isCellSelected(x,y)}" 
-        @click="handleClickCell(x,y)">
+    <div class="cell" :class="{ 'cell--taken': isCellTaken(x, y), 'cell--selected': isCellSelected(x, y) }"
+        @click="handleClickCell(x, y)">
     </div>
 </template>
 
@@ -24,27 +22,26 @@ const { isCellSelected, isCellTaken, handleClickCell } = useMap();
 </script>
 
 <style scoped>
-    .cell {
-        border: 1px solid black;
-        aspect-ratio: 1;
+.cell {
+    border: 1px solid black;
+    aspect-ratio: 1;
 
-        cursor: pointer;
+    cursor: pointer;
 
-        transition: all 0.5s;
-        transform: scale(1);
-    }
+    transition: all 0.5s;
+    transform: scale(1);
+}
 
-    .cell:hover {
-        transform: scale(0.9);
-    }
+.cell:hover {
+    transform: scale(0.9);
+}
 
 
-    .cell--taken {
-        background: rgb(78,201,176);
-    }
+.cell--taken {
+    background: rgb(78, 201, 176);
+}
 
-    .cell--selected {
-        border: 5px solid blue;
-    }
-
+.cell--selected {
+    border: 5px solid blue;
+}
 </style>

@@ -7,7 +7,7 @@ const selectedCell: Ref<Cell | null> = ref(null);
 
 export const useMap = () => {
 	const { clearStack, popStack, pushStack } = useStack();
-	
+
 	const resetMap = () => {
 		selectedCell.value = null;
 		clearStack();
@@ -38,18 +38,18 @@ export const useMap = () => {
 	const isLost = computed(() => {
 		const takenNodes = map.value.filter(x => x.isTaken);
 
-		for(let i = 0;i < takenNodes.length;i++) {
+		for (let i = 0; i < takenNodes.length; i++) {
 			const rightCell = map.value.filter(node => takenNodes[i].position.x + 1 === node.position.x && takenNodes[i].position.y === node.position.y && node.isTaken);
-			if(rightCell.length === 1 && map.value.filter(node => rightCell[0].position.x + 1 === node.position.x && rightCell[0].position.y === node.position.y && !node.isTaken).length === 1)
+			if (rightCell.length === 1 && map.value.filter(node => rightCell[0].position.x + 1 === node.position.x && rightCell[0].position.y === node.position.y && !node.isTaken).length === 1)
 				return false;
 			const leftCell = map.value.filter(node => takenNodes[i].position.x - 1 === node.position.x && takenNodes[i].position.y === node.position.y && node.isTaken);
-			if(leftCell.length === 1 && map.value.filter(node => leftCell[0].position.x - 1 === node.position.x && leftCell[0].position.y === node.position.y && !node.isTaken).length === 1)
+			if (leftCell.length === 1 && map.value.filter(node => leftCell[0].position.x - 1 === node.position.x && leftCell[0].position.y === node.position.y && !node.isTaken).length === 1)
 				return false;
 			const topCell = map.value.filter(node => takenNodes[i].position.y - 1 === node.position.y && takenNodes[i].position.x === node.position.x && node.isTaken);
-			if(topCell.length === 1 && map.value.filter(node => topCell[0].position.y - 1 === node.position.y && topCell[0].position.x === node.position.x && !node.isTaken).length === 1)
+			if (topCell.length === 1 && map.value.filter(node => topCell[0].position.y - 1 === node.position.y && topCell[0].position.x === node.position.x && !node.isTaken).length === 1)
 				return false;
 			const bottomCell = map.value.filter(node => takenNodes[i].position.y + 1 === node.position.y && takenNodes[i].position.x === node.position.x && node.isTaken);
-			if(bottomCell.length === 1 && map.value.filter(node => bottomCell[0].position.y + 1 === node.position.y && bottomCell[0].position.x === node.position.x && !node.isTaken).length === 1)
+			if (bottomCell.length === 1 && map.value.filter(node => bottomCell[0].position.y + 1 === node.position.y && bottomCell[0].position.x === node.position.x && !node.isTaken).length === 1)
 				return false;
 		}
 		return true;
@@ -87,7 +87,7 @@ export const useMap = () => {
 			if (!cellToFree.isTaken)
 				return;
 
-			
+
 			cellToFree!.isTaken = false;
 			cell.isTaken = true;
 			selectedCell.value.isTaken = false;
