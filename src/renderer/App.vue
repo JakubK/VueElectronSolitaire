@@ -2,6 +2,7 @@
   isWon: {{ isWon }}
   <br/>
   isLost: {{ isLost }}
+  <button @click="resetMap" >Reset game</button>
 
   <div class="grid">
     <div class="grid__row">
@@ -9,11 +10,11 @@
       <!-- 6 elements -->
       <Cell v-for="index in 3"
         :key="index"
-        :x="index"
+        :x="index + 2"
         :y="1"/>
       <Cell v-for="index in 3"
         :key="index"
-        :x="index"
+        :x="index + 2"
         :y="2"/>
       <div class="grid__corner grid__corner--right"></div>
     </div>
@@ -37,11 +38,11 @@
       <!-- 6 elements -->
       <Cell v-for="index in 3"
         :key="index"
-        :x="index"
+        :x="index + 2"
         :y="6"/>
       <Cell v-for="index in 3"
         :key="index"
-        :x="index"
+        :x="index + 2"
         :y="7"/>
       <div class="grid__corner grid__corner--right"></div>
     </div>
@@ -52,7 +53,9 @@
 import Cell from './Cell.vue';
 import { useMap } from './map';
 
-const { isLost, isWon } = useMap();
+const { isLost, isWon, resetMap } = useMap();
+
+resetMap();
 
 </script>
 
