@@ -1,15 +1,16 @@
 import { computed, Ref, ref } from "vue"
 import { Cell } from "../models/cell";
+import { useStack } from "./stack";
 
 const map: Ref<Cell[]> = ref([]);
-
 const selectedCell: Ref<Cell | null> = ref(null);
-const undoStack: Ref<Cell[]> = ref([]);
 
 export const useMap = () => {
+	const { clearStack, popStack, pushStack } = useStack();
+	
 	const resetMap = () => {
 		selectedCell.value = null;
-		undoStack.value = [];
+		clearStack();
 		map.value = [];
 		for (let x = 1; x <= 7; x++)
 			for (let y = 1; y <= 7; y++)
@@ -26,12 +27,11 @@ export const useMap = () => {
 		emptyCell.isTaken = false;
 	}
 
-	const isUndoStackEmpty = computed(() => undoStack.value.length === 0);
 	const undo = () => {
-		const actions = [{...undoStack.value.pop()}, {...undoStack.value.pop()}, {...undoStack.value.pop()}];
+		const actions = [popStack(), popStack(), popStack()];
 		actions.forEach(action => {
-			const toUpdate = map.value.find(node => node.position.x == action.position!.x && node.position.y == action.position!.y)!;
-			toUpdate.isTaken = !action.isTaken;
+			const toUpdate = map.value.find(node => node.position.x == action?.x && node.position.y == action.y)!;
+			toUpdate.isTaken = !toUpdate.isTaken;
 		});
 	}
 
@@ -92,10 +92,20 @@ export const useMap = () => {
 			cell.isTaken = true;
 			selectedCell.value.isTaken = false;
 
-			undoStack.value.push({...cellToFree});
-			undoStack.value.push({...cell});
-			undoStack.value.push({...selectedCell.value});
+			pushStack({
+				x: cellToFree.position.x,
+				y: cellToFree.position.y
+			});
 
+			pushStack({
+				x: cell.position.x,
+				y: cell.position.y
+			});
+
+			pushStack({
+				x: selectedCell.value.position.x,
+				y: selectedCell.value.position.y
+			});
 
 			selectedCell.value = null;
 		}
@@ -114,7 +124,6 @@ export const useMap = () => {
 		handleClickCell,
 		isCellTaken,
 		isCellSelected,
-		undo,
-		isUndoStackEmpty
+		undo
 	}
 }
