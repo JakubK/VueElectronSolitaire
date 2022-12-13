@@ -4,9 +4,12 @@ import { Cell } from "./cell";
 const map: Ref<Cell[]> = ref([]);
 
 const selectedCell: Ref<Cell | null> = ref(null);
+const undoStack: Ref<Cell[]> = ref([]);
 
 export const useMap = () => {
 	const resetMap = () => {
+		selectedCell.value = null;
+		undoStack.value = [];
 		map.value = [];
 		for (let x = 1; x <= 7; x++)
 			for (let y = 1; y <= 7; y++)
@@ -18,6 +21,15 @@ export const useMap = () => {
 
 		const emptyCell = map.value.find(cell => cell.x === 4 && cell.y === 4)!;
 		emptyCell.isTaken = false;
+	}
+
+	const isUndoStackEmpty = () => undoStack.value.length === 0;
+	const undo = () => {
+		const actions = [{...undoStack.value.pop()}, {...undoStack.value.pop()}, {...undoStack.value.pop()}];
+		actions.forEach(action => {
+			const toUpdate = map.value.find(node => node.x == action.x && node.y == action.y)!;
+			toUpdate.isTaken = !action.isTaken;
+		});
 	}
 
 	const isLost = computed(() => {
@@ -71,9 +83,17 @@ export const useMap = () => {
 			}
 			if (!cellToFree.isTaken)
 				return;
+
+			
 			cellToFree!.isTaken = false;
 			cell.isTaken = true;
 			selectedCell.value.isTaken = false;
+
+			undoStack.value.push({...cellToFree});
+			undoStack.value.push({...cell});
+			undoStack.value.push({...selectedCell.value});
+
+
 			selectedCell.value = null;
 		}
 	}
@@ -90,6 +110,8 @@ export const useMap = () => {
 		focusedCell,
 		handleClickCell,
 		isCellTaken,
-		isCellSelected
+		isCellSelected,
+		undo,
+		isUndoStackEmpty
 	}
 }
