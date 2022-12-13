@@ -19,8 +19,7 @@
 .grid__row:nth-child(3)
 {
     align-self: flex-start;
-} 
-
+}
 
 .grid__corner--left {
     grid-column: 1 / span 2;

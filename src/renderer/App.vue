@@ -2,8 +2,8 @@
   isWon: {{ isWon }}
   <br/>
   isLost: {{ isLost }}
-  <button :disabled="isUndoStackEmpty()" @click="undo">Undo</button>
-  <button @click="resetMap" >Reset game</button>
+  <button :disabled="isUndoStackEmpty" @click="undo">Undo</button>
+  <button :disabled="isUndoStackEmpty" @click="resetMap" >Reset game</button>
   <div class="grid">
     <div class="grid__row">
       <div class="grid__corner grid__corner--left"></div>
@@ -51,8 +51,7 @@
 
 <script lang="ts" setup>
 import Cell from './Cell.vue';
-import { useMap } from './map';
-
+import { useMap } from './composables/map';
 const { isLost, isWon, resetMap, undo, isUndoStackEmpty } = useMap();
 resetMap();
 

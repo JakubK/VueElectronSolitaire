@@ -1,5 +1,5 @@
 import { computed, Ref, ref } from "vue"
-import { Cell } from "./cell";
+import { Cell } from "../models/cell";
 
 const map: Ref<Cell[]> = ref([]);
 
@@ -23,7 +23,7 @@ export const useMap = () => {
 		emptyCell.isTaken = false;
 	}
 
-	const isUndoStackEmpty = () => undoStack.value.length === 0;
+	const isUndoStackEmpty = computed(() => undoStack.value.length === 0);
 	const undo = () => {
 		const actions = [{...undoStack.value.pop()}, {...undoStack.value.pop()}, {...undoStack.value.pop()}];
 		actions.forEach(action => {

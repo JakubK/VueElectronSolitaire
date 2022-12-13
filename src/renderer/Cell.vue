@@ -7,7 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useMap } from './map';
+import { useMap } from './composables/map';
+
 defineProps({
     x: {
         type: Number,
