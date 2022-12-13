@@ -3,9 +3,6 @@
         class="cell" 
         :class="{'cell--taken' : isCellTaken(x,y), 'cell--selected' : isCellSelected(x,y)}" 
         @click="handleClickCell(x,y)">
-            {{x}}
-            <br/>
-            {{y}}
     </div>
 </template>
 
