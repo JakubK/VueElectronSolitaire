@@ -16,10 +16,13 @@ export const useMap = () => {
 				if ((x > 2 && x < 6) || (y > 2 && y < 6))
 					map.value.push({
 						isTaken: true,
-						x, y
+						position:
+						{
+							x, y
+						}
 					});
 
-		const emptyCell = map.value.find(cell => cell.x === 4 && cell.y === 4)!;
+		const emptyCell = map.value.find(cell => cell.position.x === 4 && cell.position.y === 4)!;
 		emptyCell.isTaken = false;
 	}
 
@@ -27,7 +30,7 @@ export const useMap = () => {
 	const undo = () => {
 		const actions = [{...undoStack.value.pop()}, {...undoStack.value.pop()}, {...undoStack.value.pop()}];
 		actions.forEach(action => {
-			const toUpdate = map.value.find(node => node.x == action.x && node.y == action.y)!;
+			const toUpdate = map.value.find(node => node.position.x == action.position!.x && node.position.y == action.position!.y)!;
 			toUpdate.isTaken = !action.isTaken;
 		});
 	}
@@ -36,17 +39,17 @@ export const useMap = () => {
 		const takenNodes = map.value.filter(x => x.isTaken);
 
 		for(let i = 0;i < takenNodes.length;i++) {
-			const rightCell = map.value.filter(node => takenNodes[i].x + 1 === node.x && takenNodes[i].y === node.y && node.isTaken);
-			if(rightCell.length === 1 && map.value.filter(node => rightCell[0].x + 1 === node.x && rightCell[0].y === node.y && !node.isTaken).length === 1)
+			const rightCell = map.value.filter(node => takenNodes[i].position.x + 1 === node.position.x && takenNodes[i].position.y === node.position.y && node.isTaken);
+			if(rightCell.length === 1 && map.value.filter(node => rightCell[0].position.x + 1 === node.position.x && rightCell[0].position.y === node.position.y && !node.isTaken).length === 1)
 				return false;
-			const leftCell = map.value.filter(node => takenNodes[i].x - 1 === node.x && takenNodes[i].y === node.y && node.isTaken);
-			if(leftCell.length === 1 && map.value.filter(node => leftCell[0].x - 1 === node.x && leftCell[0].y === node.y && !node.isTaken).length === 1)
+			const leftCell = map.value.filter(node => takenNodes[i].position.x - 1 === node.position.x && takenNodes[i].position.y === node.position.y && node.isTaken);
+			if(leftCell.length === 1 && map.value.filter(node => leftCell[0].position.x - 1 === node.position.x && leftCell[0].position.y === node.position.y && !node.isTaken).length === 1)
 				return false;
-			const topCell = map.value.filter(node => takenNodes[i].y - 1 === node.y && takenNodes[i].x === node.x && node.isTaken);
-			if(topCell.length === 1 && map.value.filter(node => topCell[0].y - 1 === node.y && topCell[0].x === node.x && !node.isTaken).length === 1)
+			const topCell = map.value.filter(node => takenNodes[i].position.y - 1 === node.position.y && takenNodes[i].position.x === node.position.x && node.isTaken);
+			if(topCell.length === 1 && map.value.filter(node => topCell[0].position.y - 1 === node.position.y && topCell[0].position.x === node.position.x && !node.isTaken).length === 1)
 				return false;
-			const bottomCell = map.value.filter(node => takenNodes[i].y + 1 === node.y && takenNodes[i].x === node.x && node.isTaken);
-			if(bottomCell.length === 1 && map.value.filter(node => bottomCell[0].y + 1 === node.y && bottomCell[0].x === node.x && !node.isTaken).length === 1)
+			const bottomCell = map.value.filter(node => takenNodes[i].position.y + 1 === node.position.y && takenNodes[i].position.x === node.position.x && node.isTaken);
+			if(bottomCell.length === 1 && map.value.filter(node => bottomCell[0].position.y + 1 === node.position.y && bottomCell[0].position.x === node.position.x && !node.isTaken).length === 1)
 				return false;
 		}
 		return true;
@@ -56,18 +59,18 @@ export const useMap = () => {
 	const isWon = computed(() => map.value.filter(x => x.isTaken == true).length === 1);
 
 	const handleClickCell = (x: number, y: number) => {
-		const cell = map.value.find(node => node.x == x && node.y == y)!;
+		const cell = map.value.find(node => node.position.x == x && node.position.y == y)!;
 		if (cell.isTaken)
 			selectedCell.value = cell;
 		else if (selectedCell.value) {
 			//  Check if focused cell has common axis with empty space
-			const xAxis = selectedCell.value.x === x;
-			const yAxis = selectedCell.value.y === y;
+			const xAxis = selectedCell.value.position.x === x;
+			const yAxis = selectedCell.value.position.y === y;
 			if (!xAxis && !yAxis)
 				return;
 
-			const xDiff = (selectedCell.value.x - x);
-			const yDiff = (selectedCell.value.y - y);
+			const xDiff = (selectedCell.value.position.x - x);
+			const yDiff = (selectedCell.value.position.y - y);
 			const diff = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 			if (diff !== 2)
 				return;
@@ -75,11 +78,11 @@ export const useMap = () => {
 			let cellToFree: (Cell | null) = null;
 
 			if (xAxis) {
-				const removeTargetY = y < selectedCell.value.y ? y + 1 : y - 1;
-				cellToFree = map.value.find(node => node.x == x && node.y == removeTargetY)!;
+				const removeTargetY = y < selectedCell.value.position.y ? y + 1 : y - 1;
+				cellToFree = map.value.find(node => node.position.x == x && node.position.y == removeTargetY)!;
 			} else {
-				const removeTargetX = x < selectedCell.value.x ? x + 1 : x - 1;
-				cellToFree = map.value.find(node => node.y == y && node.x == removeTargetX)!;
+				const removeTargetX = x < selectedCell.value.position.x ? x + 1 : x - 1;
+				cellToFree = map.value.find(node => node.position.y == y && node.position.x == removeTargetX)!;
 			}
 			if (!cellToFree.isTaken)
 				return;
@@ -100,8 +103,8 @@ export const useMap = () => {
 
 	const focusedCell = computed(() => selectedCell.value);
 
-	const isCellSelected = (x: number, y: number) => focusedCell.value?.x == x && focusedCell.value.y == y;
-	const isCellTaken = (x: number, y: number) => map.value.find(node => node.x == x && node.y == y)?.isTaken;
+	const isCellSelected = (x: number, y: number) => focusedCell.value?.position.x == x && focusedCell.value.position.y == y;
+	const isCellTaken = (x: number, y: number) => map.value.find(node => node.position.x == x && node.position.y == y)?.isTaken;
 
 	return {
 		resetMap,

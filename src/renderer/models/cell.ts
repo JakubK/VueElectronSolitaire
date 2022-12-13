@@ -1,5 +1,6 @@
+import { Position } from "./position";
+
 export interface Cell {
-    x: number;
-    y: number;
+    position: Position
     isTaken: boolean;
 }
